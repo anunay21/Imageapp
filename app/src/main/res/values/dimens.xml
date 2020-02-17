@@ -6,6 +6,7 @@
     <dimen name="no_elevation">0dp</dimen>
     <dimen name="secondaryTextSize">20sp</dimen>
     <dimen name="primaryTextSize">18sp</dimen>
+    <dimen name="commentTextSize">14sp</dimen>
     <dimen name="radiusMedium">8dp</dimen>
     <dimen name="radiusLarge">16dp</dimen>
     <dimen name="headingTextSize">24sp</dimen>

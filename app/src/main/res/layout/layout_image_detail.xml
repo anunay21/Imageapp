@@ -87,12 +87,32 @@
                 style="@style/primaryTextStyle"
                 android:text="This is a sample description of the image. Super cool image though." />
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/tagRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
                 android:paddingStart="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/default_margin"/>
+
+            <TextView
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/primaryTextStyle"
+                android:text="Comments"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:layout_marginBottom="@dimen/medium_margin"
+                android:fontFamily="@font/muli_regular"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/commentRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

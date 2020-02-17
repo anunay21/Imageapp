@@ -13,12 +13,12 @@ import com.example.imgurapp.Retrofit.Models.Tags;
 
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<TagView> {
+public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagView> {
 
     private List<Tags> tags;
 
     private Context context;
-    public RecyclerViewAdapter(Context context){
+    public TagRecyclerViewAdapter(Context context){
         this.tags = tags;
         this.context = context;
     }

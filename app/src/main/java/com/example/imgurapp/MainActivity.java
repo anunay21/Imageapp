@@ -24,12 +24,15 @@ import android.widget.ViewSwitcher;
 
 import com.example.imgurapp.Retrofit.ApiClient;
 import com.example.imgurapp.Retrofit.ApiInterface;
+import com.example.imgurapp.Retrofit.Models.Comment;
+import com.example.imgurapp.Retrofit.Models.Comments;
 import com.example.imgurapp.Retrofit.Models.Data;
 import com.example.imgurapp.Retrofit.Models.Entity;
 import com.example.imgurapp.Retrofit.Models.Image;
 import com.example.imgurapp.Retrofit.Models.Items;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,9 +53,13 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     private View detailPageView;
     private ImageView closeDetailPageButton;
     private ImageView detailPageImage;
-    private RecyclerView recyclerView;
-    RecyclerViewAdapter adapter;
+    private RecyclerView tagRecyclerView;
+    private TagRecyclerViewAdapter adapter;
+    private RecyclerView commentRecyclerView;
+    private CommentRecyclerViewAdapter commentRecyclerViewAdapter;
+    private TextView comment;
     boolean firstReq = true;
+    List<Comment> comments;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -65,14 +72,18 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         detailPageView  = findViewById(R.id.detailPage);
         closeDetailPageButton = findViewById(R.id.detailPageCloseButton);
         detailPageImage = findViewById(R.id.detailViewImage);
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.HORIZONTAL));
+        tagRecyclerView = findViewById(R.id.tagRecyclerView);
+        tagRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.HORIZONTAL));
+        commentRecyclerView=  findViewById(R.id.commentRecyclerView);
+        commentRecyclerViewAdapter = new CommentRecyclerViewAdapter(this);
+        commentRecyclerView.setAdapter(commentRecyclerViewAdapter);
+        comment = findViewById(R.id.comment);
         itemList = new LinkedList<>();
         if (apiInterface == null) {
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
         }
-        adapter = new RecyclerViewAdapter(this);
-        recyclerView.setAdapter(adapter);
+        adapter = new TagRecyclerViewAdapter(this);
+        tagRecyclerView.setAdapter(adapter);
         imageSwitcher.setOnClickListener(this);
         closeDetailPageButton.setOnClickListener(this);
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -131,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
                 }
                 Drawable drawable = new BitmapDrawable(getResources(), itemList.get(0).getImages().get(0).getBmp());
                 imageSwitcher.setImageDrawable(drawable);
+                makeCommentsCall();
             } catch (Exception e){
                 Toast.makeText(this, e.getMessage(),Toast.LENGTH_SHORT).show();
             }
@@ -213,6 +225,12 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     }
 
     private void openDetailPage(){
+        commentRecyclerViewAdapter.setComments(comments);
+        if(comments == null || comments.size() == 0){
+            comment.setVisibility(View.GONE);
+        }else{
+            comment.setVisibility(View.VISIBLE);
+        }
         adapter.setTags(itemList.get(0).getTags());
         detailPageImage.setImageBitmap(itemList.get(0).getImages().get(0).getBmp());
         ((TextView)findViewById(R.id.title)).setText(itemList.get(0).getTitle());
@@ -256,5 +274,20 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
                 closeDetailPage();
                 break;
         }
+    }
+
+    private void makeCommentsCall(){
+        Call<Comments> commentsCall = apiInterface.getComments(itemList.get(0).getId());
+        commentsCall.enqueue(new Callback<Comments>() {
+            @Override
+            public void onResponse(Call<Comments> call, Response<Comments> response) {
+                comments = response.body().getComments();
+            }
+
+            @Override
+            public void onFailure(Call<Comments> call, Throwable t) {
+                Log.d(TAG, "Comments call failure");
+            }
+        });
     }
 }
