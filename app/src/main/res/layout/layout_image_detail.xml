@@ -125,7 +125,9 @@
                 android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginEnd="@dimen/default_margin"
                 android:layout_marginBottom="@dimen/default_margin"
-                style="@style/primaryTextStyle"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/primaryTextSize"
+                android:fontFamily="@font/muli_semi_bold"
                 android:text="Show more comments ..."/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
