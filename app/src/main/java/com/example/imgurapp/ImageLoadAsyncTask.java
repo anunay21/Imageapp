@@ -49,6 +49,9 @@ public class ImageLoadAsyncTask extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
+        if(bitmap!= null && bitmap.getByteCount()>100000000) {
+            return;
+        }
         dataWeakReference.get().getItems().get(dataItemPositionX).getImages().get(dataItemPositionY).setBmp(bitmap);
         if(firstReq) {
             imageSwitcherWeakReference.get().setVisibility(View.VISIBLE);

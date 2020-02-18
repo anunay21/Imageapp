@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         commentRecyclerViewAdapter = new CommentRecyclerViewAdapter(this);
         commentRecyclerView.setAdapter(commentRecyclerViewAdapter);
         comment = findViewById(R.id.comment);
+        findViewById(R.id.shoWMoreComments).setOnClickListener(this);
+
         itemList = new LinkedList<>();
         if (apiInterface == null) {
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -227,7 +229,13 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     }
 
     private void openDetailPage(){
-        commentRecyclerViewAdapter.setComments(comments);
+        if(comments != null && comments.size()>20){
+            commentRecyclerViewAdapter.setComments(comments.subList(0,19));
+            findViewById(R.id.shoWMoreComments).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.shoWMoreComments).setVisibility(View.GONE);
+            commentRecyclerViewAdapter.setComments(comments);
+        }
         if(comments == null || comments.size() == 0){
             comment.setVisibility(View.GONE);
         }else{
@@ -280,6 +288,9 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
             case R.id.detailPageCloseButton:
                 closeDetailPage();
                 break;
+            case R.id.shoWMoreComments:
+                showMoreComments();
+                break;
         }
     }
 
@@ -316,5 +327,10 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         firstReq = true;
         currentPosition = 0;
         makeScienceAndTechReq();
+    }
+
+    private void showMoreComments(){
+        commentRecyclerViewAdapter.setComments(comments);
+        findViewById(R.id.shoWMoreComments).setVisibility(View.GONE);
     }
 }
