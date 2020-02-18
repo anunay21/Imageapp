@@ -10,8 +10,8 @@ import retrofit2.http.Path;
 
 public interface ApiInterface {
 
-    @GET("3/gallery/t/science_and_tech///")
-    Call<Entity> getScienceAndTechImages();
+    @GET("3/gallery/t/science_and_tech///{pageNo}")
+    Call<Entity> getScienceAndTechImages(@Path("pageNo") int pageNo);
 
     @GET("3/gallery/{galleryHash}/comments/best")
     Call<Comments> getComments(@Path("galleryHash") String galleryHash);

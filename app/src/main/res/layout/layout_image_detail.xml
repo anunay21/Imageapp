@@ -112,7 +112,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
                 android:layout_marginStart="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin"/>
+                android:layout_marginEnd="@dimen/default_margin" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

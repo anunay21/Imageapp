@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     private TextView comment;
     boolean firstReq = true;
     List<Comment> comments;
+    private int pageNo = 0;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     }
 
     private void makeScienceAndTechReq(){
-        Call<Entity> entity = apiInterface.getScienceAndTechImages();
+        Call<Entity> entity = apiInterface.getScienceAndTechImages(pageNo++);
         entity.enqueue(new Callback<Entity>() {
             @Override
             public void onResponse(Call<Entity> call, Response<Entity> response) {
@@ -130,9 +131,10 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         addNextItemToList();
         cleanBitmapAndthenRemoveFromList();
         if(itemList.size() == 0){
-            Toast.makeText(this, "Showed all the images",Toast.LENGTH_SHORT).show();
-            progressBarAnimator.setRepeatCount(Animation.ABSOLUTE);
+            Toast.makeText(this, "Querying the next batch.",Toast.LENGTH_SHORT).show();
+            progressBarAnimator.end();
             imageSwitcher.setClickable(false);
+            queryNext();
             return;
         }
         if(itemList != null && itemList.size() >0 &&itemList.get(0)!=null){
@@ -232,7 +234,12 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
             comment.setVisibility(View.VISIBLE);
         }
         adapter.setTags(itemList.get(0).getTags());
-        detailPageImage.setImageBitmap(itemList.get(0).getImages().get(0).getBmp());
+        try{
+            detailPageImage.setImageBitmap(itemList.get(0).getImages().get(0).getBmp());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         ((TextView)findViewById(R.id.title)).setText(itemList.get(0).getTitle());
         String desc = itemList.get(0).getImages().get(0).getDescription();
         if(desc == null || "".equals(desc)){
@@ -289,5 +296,25 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
                 Log.d(TAG, "Comments call failure");
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        if(!firstReq){
+            progressBarAnimator.resume();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        progressBarAnimator.pause();
+    }
+
+    private void queryNext(){
+        firstReq = true;
+        currentPosition = 0;
+        makeScienceAndTechReq();
     }
 }
